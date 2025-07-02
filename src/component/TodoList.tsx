@@ -6,6 +6,7 @@ const TodoList: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [editingTitles, setEditingTitles] = useState<{ [key: number]: string }>({});
   const textAreaRefs = useRef<{ [key: number]: HTMLTextAreaElement | null }>({});
+  const envValue = process.env.REACT_APP_VITE_API_BASE_URL;
 
   useEffect(() => {
     todos.forEach(todo => {
@@ -22,14 +23,14 @@ const TodoList: React.FC = () => {
   }, []);
 
   const fetchTodos = () => {
-    axios.get<Todo[]>('http://localhost:8080/api/todos')
+    axios.get<Todo[]>(`${envValue}/todos`)
       .then(res => setTodos(res.data))
       .catch(err => console.error(err));
   };
 
   const handleCompleted = (todo: Todo) => {
     const updated = { ...todo, completed: !todo.completed };
-    axios.patch<Todo>(`http://localhost:8080/api/todos/${todo.id}`, updated)
+    axios.patch<Todo>(`${envValue}/todos/${todo.id}`, updated)
       .then(res => {
         setTodos(prev => prev.map(t => (t.id === todo.id ? res.data : t)));
         setEditingTitles(prev => ({ ...prev, [todo.id]: res.data.title }));
@@ -51,7 +52,7 @@ const TodoList: React.FC = () => {
     if (!newTitle || newTitle.trim() === "" || newTitle === todo.title) return;
 
     const updated = { ...todo, title: newTitle };
-    axios.patch<Todo>(`http://localhost:8080/api/todos/${todo.id}`, updated)
+    axios.patch<Todo>(`${envValue}/todos/${todo.id}`, updated)
       .then(res => {
         setTodos(prev => prev.map(t => (t.id === todo.id ? res.data : t)));
         setEditingTitles(prev => ({ ...prev, [todo.id]: res.data.title }));
