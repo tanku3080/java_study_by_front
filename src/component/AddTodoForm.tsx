@@ -10,13 +10,14 @@ interface Props {
 const AddTodoForm: React.FC<Props> = ({ onAdd }) => {
   const [title, setTitle] = useState('');
 
+  const envValue = process.env.REACT_APP_VITE_API_BASE_URL;
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const newTodo = {
       title,
       completed: false
     };
-    const res = await axios.post<Todo>('http://localhost:8080/api/todos', newTodo);
+    const res = await axios.post<Todo>(`${envValue}/todos`, newTodo);
     onAdd(res.data);
     setTitle('');
   };
