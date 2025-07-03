@@ -11,6 +11,7 @@ const AddTodoForm: React.FC<Props> = ({ onAdd }) => {
   const [title, setTitle] = useState('');
 
   const envValue = process.env.REACT_APP_VITE_API_BASE_URL;
+  console.log("env確認:", envValue);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const newTodo = {
